@@ -249,9 +249,12 @@ CASAuthentication.prototype._login = function(req, res, next) {
 
     // Set up the query parameters.
     var query = {
-        service: this.service_url + url.parse(req.url).pathname,
-        renew: this.renew
+        service: this.service_url + url.parse(req.url).pathname
     };
+
+    if(this.renew) {
+        query.renew = this.renew
+    }
 
     // Redirect to the CAS login.
     res.redirect( this.cas_url + url.format({
@@ -281,8 +284,15 @@ CASAuthentication.prototype.logout = function(req, res, next) {
         }
     }
 
-    // Redirect the client to the CAS logout.
-    res.redirect(this.cas_url + '/logout');
+  // Set up the query parameters.
+  var query = {
+    service: this.service_url
+  };
+
+  res.redirect( this.cas_url + url.format({
+    pathname: '/logout',
+    query: query
+  }));
 };
 
 /**
